@@ -1,0 +1,14 @@
+{
+  "name": "alim-maps",
+  "version": "1.0.0",
+  "description": "Alim Maps module providing ready-made maps and virtual tours",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "author": "ALİM",
+  "license": "MIT"
+}
