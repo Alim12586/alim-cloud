@@ -20,7 +20,11 @@ app.get("/maps/tour/:location", (req, res) => {
 
 // List all tours with translated metadata
 app.get("/maps/list", async (req, res) => {
-  const userLang = req.query.lang || "en"; // default language is English
+  // Detect user language from browser (Accept-Language header)
+  const userLang = req.headers["accept-language"] 
+    ? req.headers["accept-language"].split(",")[0].split("-")[0] 
+    : "en"; // default English
+
   const toursDir = path.join(__dirname, "tours");
   const files = fs.readdirSync(toursDir).filter(f => f.endsWith(".html"));
 
@@ -29,13 +33,13 @@ app.get("/maps/list", async (req, res) => {
 
     // Extract metadata from HTML
     const titleMatch = content.match(/<h2>(.*?)<\/h2>/);
-    const cityMatch = content.match(/<p>(İl|City|Ville|Ciudad|Stadt): (.*?)<\/p>/);
-    const districtMatch = content.match(/<p>(İlçe|District|Quartier|Distrito|Bezirk): (.*?)<\/p>/);
+    const cityMatch = content.match(/<p>City: (.*?)<\/p>/);
+    const districtMatch = content.match(/<p>District: (.*?)<\/p>/);
 
     // Translate to user language
     const title = titleMatch ? (await translate(titleMatch[1], { to: userLang })).text : "Title not found";
-    const city = cityMatch ? (await translate(cityMatch[2], { to: userLang })).text : "City not found";
-    const district = districtMatch ? (await translate(districtMatch[2], { to: userLang })).text : "District not found";
+    const city = cityMatch ? (await translate(cityMatch[1], { to: userLang })).text : "City not found";
+    const district = districtMatch ? (await translate(districtMatch[1], { to: userLang })).text : "District not found";
 
     return { file, title, city, district };
   }));
