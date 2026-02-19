@@ -21,8 +21,8 @@ app.get("/maps/tour/:location", (req, res) => {
 // List all tours with translated metadata
 app.get("/maps/list", async (req, res) => {
   // Detect user language from browser (Accept-Language header)
-  const userLang = req.headers["accept-language"] 
-    ? req.headers["accept-language"].split(",")[0].split("-")[0] 
+  const userLang = req.headers["accept-language"]
+    ? req.headers["accept-language"].split(",")[0].split("-")[0]
     : "en"; // default English
 
   const toursDir = path.join(__dirname, "tours");
@@ -31,7 +31,7 @@ app.get("/maps/list", async (req, res) => {
   const list = await Promise.all(files.map(async file => {
     const content = fs.readFileSync(path.join(toursDir, file), "utf8");
 
-    // Extract metadata from HTML
+    // Extract metadata from English HTML
     const titleMatch = content.match(/<h2>(.*?)<\/h2>/);
     const cityMatch = content.match(/<p>City: (.*?)<\/p>/);
     const districtMatch = content.match(/<p>District: (.*?)<\/p>/);
